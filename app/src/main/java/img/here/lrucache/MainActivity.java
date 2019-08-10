@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.LruCache;
+import android.view.View;
 import android.widget.ImageView;
 
 import java.io.IOException;
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    MainActivityviewmodel  lvm;
+   public MainActivityviewmodel  lvm;
     ImageView mainimage;
     Bitmap image;
 
@@ -57,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<GitTrending> gitTrending) {
 
+
+                mainactivty.progressBar.setVisibility(View.INVISIBLE);
+
                 if(gitTrending!=null)
                 {
 
@@ -74,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        lvm.getGitDataFromNetwork();
 
 
 
@@ -93,6 +96,13 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        lvm.getGitDataFromNetwork();
 
     }
 

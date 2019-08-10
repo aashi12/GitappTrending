@@ -7,6 +7,7 @@ import android.arch.lifecycle.ViewModel;
 
 import java.util.List;
 
+import img.here.lrucache.EspressoIdling;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -51,6 +52,7 @@ public class MainActivityviewmodel  extends ViewModel
     public  void  getGitDataFromNetwork()
     {
 
+        EspressoIdling.increment();
 
         RestConfig.getRetrofitInstance().create(RestInterface.class).getTrendeingRepo("javascript","weekly").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleObserver<List<GitTrending>>() {
             @Override
@@ -63,6 +65,7 @@ public class MainActivityviewmodel  extends ViewModel
                                           gitTrending)
             {
 
+
                 if(gitTrending!=null)
                 {
 
@@ -70,11 +73,19 @@ public class MainActivityviewmodel  extends ViewModel
                     gitdata.postValue(gitTrending);
                 }
 
+                if (!EspressoIdling.getIdlingResource().isIdleNow())
+                {
+                    EspressoIdling.decrement(); // Set app as idle.
+                }
+
             }
 
             @Override
             public void onError(Throwable e) {
-
+                if (!EspressoIdling.getIdlingResource().isIdleNow())
+                {
+                    EspressoIdling.decrement(); // Set app as idle.
+                }
             }
         });
 
