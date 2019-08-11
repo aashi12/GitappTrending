@@ -1,6 +1,8 @@
 package pojos;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.util.LruCache;
 
 import img.here.lrucache.MainActivity;
 
@@ -24,22 +26,21 @@ public class ListPojo
         this.position = position;
     }
 
-    MainActivity con;
-    public ListPojo(String username, String giturl, String imageurl, MainActivity context,int positon) {
+    LruCache<String, Bitmap> mcache;
+    public ListPojo(String username, String giturl, String imageurl, LruCache<String, Bitmap> cache,int positon) {
         this.username = username;
         this.giturl = giturl;
         this.imageurl = imageurl;
-        con=context;
+        mcache=cache;
         this.position=positon;
     }
 
-
-    public MainActivity getCon() {
-        return con;
+    public LruCache<String, Bitmap> getMcache() {
+        return mcache;
     }
 
-    public void setCon(MainActivity con) {
-        this.con = con;
+    public void setMcache(LruCache<String, Bitmap> mcache) {
+        this.mcache = mcache;
     }
 
     public String getUsername() {

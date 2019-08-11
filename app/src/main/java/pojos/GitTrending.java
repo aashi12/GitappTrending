@@ -1,12 +1,16 @@
 
 package pojos;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
 
 @SuppressWarnings("unused")
-public class GitTrending {
+public class GitTrending implements Parcelable {
 
     @SerializedName("author")
     private String mAuthor;
@@ -119,4 +123,53 @@ public class GitTrending {
         mUrl = url;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.mAuthor);
+        dest.writeString(this.mAvatar);
+        dest.writeList(this.mBuiltBy);
+        dest.writeValue(this.mCurrentPeriodStars);
+        dest.writeString(this.mDescription);
+        dest.writeValue(this.mForks);
+        dest.writeString(this.mLanguage);
+        dest.writeString(this.mLanguageColor);
+        dest.writeString(this.mName);
+        dest.writeValue(this.mStars);
+        dest.writeString(this.mUrl);
+    }
+
+    public GitTrending() {
+    }
+
+    protected GitTrending(Parcel in) {
+        this.mAuthor = in.readString();
+        this.mAvatar = in.readString();
+        this.mBuiltBy = new ArrayList<BuiltBy>();
+        in.readList(this.mBuiltBy, BuiltBy.class.getClassLoader());
+        this.mCurrentPeriodStars = (Long) in.readValue(Long.class.getClassLoader());
+        this.mDescription = in.readString();
+        this.mForks = (Long) in.readValue(Long.class.getClassLoader());
+        this.mLanguage = in.readString();
+        this.mLanguageColor = in.readString();
+        this.mName = in.readString();
+        this.mStars = (Long) in.readValue(Long.class.getClassLoader());
+        this.mUrl = in.readString();
+    }
+
+    public static final Parcelable.Creator<GitTrending> CREATOR = new Parcelable.Creator<GitTrending>() {
+        @Override
+        public GitTrending createFromParcel(Parcel source) {
+            return new GitTrending(source);
+        }
+
+        @Override
+        public GitTrending[] newArray(int size) {
+            return new GitTrending[size];
+        }
+    };
 }

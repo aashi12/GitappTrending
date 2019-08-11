@@ -1,9 +1,12 @@
 package adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +15,12 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import adapter.di.DaggerRetComponent;
+import adapter.di.lrumodule;
+import img.here.lrucache.Appli;
+import img.here.lrucache.DetialsActivity;
 import img.here.lrucache.MainActivity;
 import img.here.lrucache.R;
 import img.here.lrucache.databinding.RowGitBinding;
@@ -39,8 +48,18 @@ public class GitDataAdapter  extends RecyclerView.Adapter<GitDataAdapter.GitData
         mAlldata=alldata;
         mcon=con;
 
+        ((Appli)con.getApplication()).mycomp.inject(this);
 
     }
+
+
+
+    @Inject
+    public  LruCache<String, Bitmap> memoryCache;
+
+
+
+
 
     @NonNull
     @Override
@@ -57,7 +76,7 @@ public class GitDataAdapter  extends RecyclerView.Adapter<GitDataAdapter.GitData
     {
 
 
-        holder.mybinfing.setData(new ListPojo(mAlldata.get(position).getName(),mAlldata.get(position).getUrl(),mAlldata.get(position).getAvatar(),mcon,position));
+        holder.mybinfing.setData(new ListPojo(mAlldata.get(position).getName(),mAlldata.get(position).getUrl(),mAlldata.get(position).getAvatar(),memoryCache,position));
 
 
     }
@@ -81,6 +100,23 @@ public class GitDataAdapter  extends RecyclerView.Adapter<GitDataAdapter.GitData
             super(itemView.getRoot());
 
             mybinfing =itemView;
+
+
+
+            mybinfing.getRoot().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+                    Intent intemt = new Intent(mcon, DetialsActivity.class);
+
+
+                    intemt.putExtra("detailsdata",mAlldata.get(getAdapterPosition()));
+                    intemt.putExtra("detail","j");
+                    mcon.startActivity(intemt);
+
+                }
+            });
 
 
 

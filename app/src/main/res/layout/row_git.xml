@@ -1,6 +1,7 @@
 <layout>
     <data>
-
+        <import type="android.util.LruCache"/>
+        <import type="android.graphics.Bitmap"/>
         <variable
             name="data"
             type="pojos.ListPojo" />
@@ -8,6 +9,10 @@
         <variable
             name="handler"
             type="img.here.lrucache.MainActivity" />
+
+        <variable
+            name="cache"
+            type="LruCache&lt;String,Bitmap&gt;" />
 
 
 
@@ -23,16 +28,15 @@
 
     <ImageView
         android:id="@+id/img_avatar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        app:contt="@{data.con}"
-        app:setimage="@{data.imageurl}"
-        app:pos="@{data.position}"
-        android:background="@mipmap/ic_launcher"
+        app:contt="@{data.mcache}"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:pos="@{data.position}"
+        app:setimage="@{data.imageurl}" />
 
     <TextView
         android:id="@+id/tv_username"

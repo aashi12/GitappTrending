@@ -1,14 +1,14 @@
 package img.here.lrucache;
 
 
-
-
-import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
+
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -23,36 +23,43 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import adapter.GitDataAdapter;
 import img.here.lrucache.databinding.ActivityMainBinding;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import pojos.GitTrending;
 import viewmodel.MainActivityviewmodel;
+import viewmodel.MainActivityviewmodelFactory;
 
 public class MainActivity extends AppCompatActivity {
 
 
-
-   public MainActivityviewmodel  lvm;
+    public MainActivityviewmodel lvm;
     ImageView mainimage;
     Bitmap image;
 
     ActivityMainBinding mainactivty;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainactivty = DataBindingUtil.setContentView(this,R.layout.activity_main);
+        mainactivty = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         mainactivty.setHandler(this);
 
 
 
 
-        chacingSetup();
 
+        MainActivityviewmodelFactory factory = new MainActivityviewmodelFactory(((Appli)getApplication()).mycomp);
 
-
-        lvm = ViewModelProviders.of(this).get(MainActivityviewmodel.class);
-
+        lvm = ViewModelProviders.of(this,factory).get(MainActivityviewmodel.class);
 
         lvm.SuscribeGitData().observe(this, new Observer<List<GitTrending>>() {
             @Override
@@ -61,37 +68,15 @@ public class MainActivity extends AppCompatActivity {
 
                 mainactivty.progressBar.setVisibility(View.INVISIBLE);
 
-                if(gitTrending!=null)
-                {
-
-
-
-                  //  if(mainactivty.recyy.getAdapter()!=null)
+                if (gitTrending != null) {
 
 
                     mainactivty.setAlldata(gitTrending);
 
 
-
                 }
             }
         });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      //   saveBitmap();
 
 
 
@@ -106,51 +91,26 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private static  LruCache<String, Bitmap> memoryCache;
-
-    private void chacingSetup()
-    {
-
-        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-
-        // Use 1/8th of the available memory for this memory cache.
-        final int cacheSize = maxMemory / 8;
 
 
+    public static LruCache<String, Bitmap> memoryCache;
 
-        memoryCache = new LruCache<String, Bitmap>(cacheSize) {
-            @Override
-            protected int sizeOf(String key, Bitmap bitmap) {
-                // The cache size will be measured in kilobytes rather than
-                // number of items.
-                return bitmap.getByteCount() / 1024;
-            }
-        };
-
-    }
 
 
 
     public static void addBitmapToMemoryCache(String key, Bitmap bitmap) {
         if (getBitmapFromMemCache(key) == null)
-        {
-
-
-
-
-
-            memoryCache.put(key, bitmap);
+        { memoryCache.put(key, bitmap);
         }
     }
 
-    public static  Bitmap getBitmapFromMemCache(String key) {
+    public static Bitmap getBitmapFromMemCache(String key) {
         return memoryCache.get(key);
     }
 
 
     @BindingAdapter({"myalldata", "conte"})
-    public  static  void ShowImage(RecyclerView recy, List<GitTrending> mallData, MainActivity handler)
-    {
+    public static void ShowImage(RecyclerView recy, List<GitTrending> mallData, MainActivity handler) {
 
         RecyclerView.LayoutManager lmr = new LinearLayoutManager(handler);
 
@@ -161,77 +121,101 @@ public class MainActivity extends AppCompatActivity {
         recy.setAdapter(new GitDataAdapter(handler, mallData));
 
 
-
     }
 
 
-
-    @BindingAdapter({"contt","setimage","pos"})
-    public  static void setIMage(final ImageView myimage, final Context context, final String url, final int pos)
+    @BindingAdapter({"contt", "setimage", "pos"})
+    public static void setIMage(final ImageView myimage, final LruCache<String, Bitmap> cache, final String url, final int pos)
     {
+        memoryCache=cache;
+
+        if (getBitmapFromMemCache(url) == null)
 
 
+            Observable.create(new ObservableOnSubscribe<Bitmap>()
+            {
+                @Override
+                public void subscribe(ObservableEmitter<Bitmap> emitter) throws Exception {
 
-        if(getBitmapFromMemCache(pos+"")==null)
 
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try
-                {
                     URL urlll = new URL(url);
-                   final Bitmap image = BitmapFactory.decodeStream(urlll.openConnection().getInputStream());
-                   addBitmapToMemoryCache(pos+"",image);
-                   ((MainActivity)context).runOnUiThread(new Runnable() {
-                        @Override
-                        public void run()
-                        {
-                            myimage.setImageBitmap(image);
-                        }
-                    });
-
-
-                } catch(IOException e) {
+                    Bitmap image = BitmapFactory.decodeStream(urlll.openConnection().getInputStream());
+                    addBitmapToMemoryCache(url + "", image);
+                    emitter.onNext(image);
+                }
+            }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new io.reactivex.Observer<Bitmap>() {
+                @Override
+                public void onSubscribe(Disposable d) {
 
                 }
-            }
-        }).start();
+
+                @Override
+                public void onNext(Bitmap s) {
+                    myimage.setImageBitmap(s);
+                }
+
+                @Override
+                public void onError(Throwable e) {
+
+                }
+
+                @Override
+                public void onComplete() {
+
+                }
+            });
+
+
+
+
+
+
+
 
 
         else {
-            myimage.setImageBitmap(getBitmapFromMemCache(pos+""));
+            myimage.setImageBitmap(getBitmapFromMemCache(url + ""));
 
         }
+
+
+
+
+
+
+
+
+
+//        if (getBitmapFromMemCache(pos + "") == null)
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    try {
+//                        URL urlll = new URL(url);
+//                        final Bitmap image = BitmapFactory.decodeStream(urlll.openConnection().getInputStream());
+//                        addBitmapToMemoryCache(pos + "", image);
+//                        ((MainActivity) myimage.getContext()).runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                myimage.setImageBitmap(image);
+//                            }
+//                        });
+//
+//
+//                    } catch (IOException e) {
+//
+//                    }
+//                }
+//            }).start();
+//
+//
+//        else {
+//            myimage.setImageBitmap(getBitmapFromMemCache(pos + ""));
+//
+//        }
     }
 
 
-
-
-    private void saveBitmap()
-    {
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try
-                {
-                    URL url = new URL("http://52.172.194.248/proof-pics/123_2019_8_8_670-1565260253.jpg");
-                    image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mainimage.setImageBitmap(image);
-                        }
-                    });
-
-
-                } catch(IOException e) {
-                    System.out.println(e);
-                }
-            }
-        }).start();
-    }
 
 }
 
