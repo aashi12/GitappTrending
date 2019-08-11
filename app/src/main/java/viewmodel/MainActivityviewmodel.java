@@ -3,18 +3,14 @@ package viewmodel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
-import android.support.annotation.NonNull;
 
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import adapter.di.DaggerRetComponent;
 import adapter.di.RetComponent;
-import adapter.di.lrumodule;
-import img.here.lrucache.EspressoIdling;
+import espressohelper.EspressoIdling;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -27,13 +23,15 @@ public class MainActivityviewmodel  extends ViewModel
 
 
 
-    MutableLiveData<List<GitTrending>> gitdata ;
+    private MutableLiveData<List<GitTrending>> gitdata ;
+    @Inject
+    RestInterface httpRest;
 
 
 
 
 
-    RetComponent mdaggerRetComponent;
+    private RetComponent mdaggerRetComponent;
 
     MainActivityviewmodel(RetComponent mycpom)
     {
@@ -46,8 +44,6 @@ public class MainActivityviewmodel  extends ViewModel
 
 
 
-    @Inject
-    RestInterface httpRest;
 
 
 
@@ -55,13 +51,7 @@ public class MainActivityviewmodel  extends ViewModel
 
     public LiveData<List<GitTrending>> SuscribeGitData(){
 
-       //DaggerRetComponent.builder().build().inject(this);
-        //DaggerRetComponent.builder().lrumodule(new lrumodule(cacheSize)).build().inject(this);
-
-
-
-
-       if(gitdata==null)
+        if(gitdata==null)
        {
 
 
@@ -70,21 +60,11 @@ public class MainActivityviewmodel  extends ViewModel
 
        return  gitdata;
 
-
-
     }
 
 
-
-
-
     public  void  getGitDataFromNetwork()
-    {
-
-        EspressoIdling.increment();
-
-
-
+    {   EspressoIdling.increment();
         httpRest.getTrendeingRepo("javascript","weekly").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleObserver<List<GitTrending>>() {
             @Override
             public void onSubscribe(Disposable d) {

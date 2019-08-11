@@ -112,9 +112,9 @@ public class MainActivity extends AppCompatActivity {
     @BindingAdapter({"myalldata", "conte"})
     public static void ShowImage(RecyclerView recy, List<GitTrending> mallData, MainActivity handler) {
 
-        RecyclerView.LayoutManager lmr = new LinearLayoutManager(handler);
+        LinearLayoutManager lmr = new LinearLayoutManager(handler);
 
-        ((LinearLayoutManager) lmr).setOrientation(LinearLayoutManager.VERTICAL);
+        lmr.setOrientation(LinearLayoutManager.VERTICAL);
 
         recy.setLayoutManager(lmr);
 
@@ -186,33 +186,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-//        if (getBitmapFromMemCache(pos + "") == null)
-//            new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    try {
-//                        URL urlll = new URL(url);
-//                        final Bitmap image = BitmapFactory.decodeStream(urlll.openConnection().getInputStream());
-//                        addBitmapToMemoryCache(pos + "", image);
-//                        ((MainActivity) myimage.getContext()).runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                myimage.setImageBitmap(image);
-//                            }
-//                        });
-//
-//
-//                    } catch (IOException e) {
-//
-//                    }
-//                }
-//            }).start();
-//
-//
-//        else {
-//            myimage.setImageBitmap(getBitmapFromMemCache(pos + ""));
-//
-//        }
+
     }
 
 

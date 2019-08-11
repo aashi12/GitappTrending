@@ -37,11 +37,11 @@ public class GitDataAdapter  extends RecyclerView.Adapter<GitDataAdapter.GitData
 
 
 
-    List<GitTrending>  mAlldata;
+    private List<GitTrending>  mAlldata;
 
 
 
-    MainActivity mcon;
+    private MainActivity mcon;
 
     public  GitDataAdapter(MainActivity con, List<GitTrending> alldata)
     {
@@ -55,7 +55,7 @@ public class GitDataAdapter  extends RecyclerView.Adapter<GitDataAdapter.GitData
 
 
     @Inject
-    public  LruCache<String, Bitmap> memoryCache;
+    LruCache<String, Bitmap> memoryCache;
 
 
 
@@ -89,14 +89,14 @@ public class GitDataAdapter  extends RecyclerView.Adapter<GitDataAdapter.GitData
         else return  0;
     }
 
-    public  class  GitDataViewholder extends  RecyclerView.ViewHolder
+    class  GitDataViewholder extends  RecyclerView.ViewHolder
     {
 
-        public  RowGitBinding  mybinfing;
+        RowGitBinding  mybinfing;
 
 
 
-        public GitDataViewholder(@NonNull RowGitBinding itemView) {
+        GitDataViewholder(@NonNull RowGitBinding itemView) {
             super(itemView.getRoot());
 
             mybinfing =itemView;

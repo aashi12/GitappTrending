@@ -56,9 +56,9 @@ public class DetialsActivity extends AppCompatActivity {
     @BindingAdapter({"myallda"})
     public static void ShowfilledData(RecyclerView recy, GitTrending mallData) {
 
-        RecyclerView.LayoutManager lmr = new LinearLayoutManager(recy.getContext());
+        LinearLayoutManager lmr = new LinearLayoutManager(recy.getContext());
 
-        ((LinearLayoutManager) lmr).setOrientation(LinearLayoutManager.VERTICAL);
+        lmr.setOrientation(LinearLayoutManager.VERTICAL);
 
         recy.setLayoutManager(lmr);
 
@@ -116,26 +116,7 @@ public class DetialsActivity extends AppCompatActivity {
 
 
 
-//            new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    try {
-//                        URL urlll = new URL(url);
-//                        final Bitmap image = BitmapFactory.decodeStream(urlll.openConnection().getInputStream());
-//                        addBitmapToMemoryCache(url + "", image);
-//                        ((DetialsActivity) myimage.getContext()).runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                myimage.setImageBitmap(image);
-//                            }
-//                        });
-//
-//
-//                    } catch (IOException e) {
-//
-//                    }
-//                }
-//            }).start();
+
 
 
         else {

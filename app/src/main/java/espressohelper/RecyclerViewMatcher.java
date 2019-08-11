@@ -1,4 +1,4 @@
-package img.here.lrucache;
+package espressohelper;
 
 import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +13,7 @@ import java.util.Objects;
 public class RecyclerViewMatcher {
     private final int recyclerViewId;
 
-    RecyclerViewMatcher(int recyclerViewId) {
+    public RecyclerViewMatcher(int recyclerViewId) {
         this.recyclerViewId = recyclerViewId;
     }
 
@@ -21,7 +21,7 @@ public class RecyclerViewMatcher {
         return atPositionOnView(position, -1);
     }
 
-    Matcher<View> atPositionOnView(final int position, final int targetViewId) {
+    public Matcher<View> atPositionOnView(final int position, final int targetViewId) {
 
         return new TypeSafeMatcher<View>() {
             Resources resources = null;

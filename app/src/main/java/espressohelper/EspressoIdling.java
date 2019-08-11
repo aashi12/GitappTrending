@@ -1,7 +1,6 @@
-package img.here.lrucache;
+package espressohelper;
 
 import android.support.test.espresso.IdlingResource;
-import android.support.test.espresso.idling.CountingIdlingResource;
 
 public class EspressoIdling
 {

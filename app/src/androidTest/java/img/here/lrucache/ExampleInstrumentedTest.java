@@ -1,8 +1,5 @@
 package img.here.lrucache;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.IdlingRegistry;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.intent.Intents;
@@ -18,7 +15,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.InstrumentationRegistry.getTargetContext;
+import espressohelper.EspressoIdling;
+import espressohelper.RecyclerViewMatcher;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -26,13 +25,11 @@ import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.toPackage;
-import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.core.AllOf.allOf;
-import static org.junit.Assert.*;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -119,7 +116,7 @@ public class ExampleInstrumentedTest
     }
 
     @Test
-    public void chkProgress_Bar_gone() throws InterruptedException {
+    public void chkProgressBarGone() throws InterruptedException {
 
 
         mActivityTestRule.getActivity().lvm.getGitDataFromNetwork();
@@ -138,7 +135,7 @@ public class ExampleInstrumentedTest
 
 
     @Test
-    public  void  DetailsActivtyLajunched()
+    public  void DetailsActivtyLaunched()
     {
         if(getRVcount()>0)
             mActivityTestRule.getActivity().lvm.getGitDataFromNetwork();
@@ -147,11 +144,28 @@ public class ExampleInstrumentedTest
 
         intended(hasComponent(DetialsActivity.class.getName()));
 
+
+
+
     }
 
 
+ @Test
+    public  void DetailsActivtyLaunchedWithCorrectdata()
+    {
+       DetailsActivtyLaunched();
+        onView(ViewMatchers.withId(R.id.tv_name)).check(matches(withText("hackathon-starter")));
+
+
+    }
+
+
+
+
+
+
     @Test
-      public  void  chkintentData()
+      public  void chkIntentData()
       {
 
 

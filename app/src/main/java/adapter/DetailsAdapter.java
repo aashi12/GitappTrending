@@ -23,8 +23,8 @@ import pojos.ListPojo;
 public class DetailsAdapter  extends  RecyclerView.Adapter<DetailsAdapter.DetailsViewHolder>
 {
 
-    Context mcon;
-    GitTrending mdata;
+    private Context mcon;
+    private GitTrending mdata;
 
 
 
@@ -34,7 +34,7 @@ public class DetailsAdapter  extends  RecyclerView.Adapter<DetailsAdapter.Detail
 
 
     @Inject
-    public LruCache<String, Bitmap> memoryCache;
+    LruCache<String, Bitmap> memoryCache;
 
 
     public DetailsAdapter(Context con, GitTrending alldata)
@@ -70,12 +70,12 @@ public class DetailsAdapter  extends  RecyclerView.Adapter<DetailsAdapter.Detail
         return mdata.getBuiltBy().size();
     }
 
-    public  class  DetailsViewHolder extends RecyclerView.ViewHolder
+    class  DetailsViewHolder extends RecyclerView.ViewHolder
     {
 
         RowDetailsBinding   mybinding;
 
-        public DetailsViewHolder(@NonNull RowDetailsBinding itemView) {
+        DetailsViewHolder(@NonNull RowDetailsBinding itemView) {
             super(itemView.getRoot());
             mybinding=itemView;
         }

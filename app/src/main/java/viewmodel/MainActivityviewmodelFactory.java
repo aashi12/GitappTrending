@@ -4,14 +4,14 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
-import adapter.di.DaggerRetComponent;
+
 import adapter.di.RetComponent;
 
 public class MainActivityviewmodelFactory  implements ViewModelProvider.Factory
 {
 
 
-    RetComponent mDaggerRetComponent;
+    private RetComponent mDaggerRetComponent;
 
     public MainActivityviewmodelFactory(RetComponent daggerRetComponent)
     {

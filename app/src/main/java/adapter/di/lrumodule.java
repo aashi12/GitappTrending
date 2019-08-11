@@ -14,7 +14,7 @@ import dagger.Provides;
 public class lrumodule
 {
 
-    int sizeofcache;
+    private int sizeofcache;
 
 
     public lrumodule(int cache)
